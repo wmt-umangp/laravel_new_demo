@@ -5,9 +5,11 @@
         <div class="mt-5 row justify-content-center">
             <div class="mt-5 col-md-4">
                 <div class="mt-5 card">
-                    <h3 class="card-header text-center">Login</h3>
+                    <h3 class="card-header text-center"> {{ isset($url) ? ucwords($url) : '' }} Login</h3>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('signin') }}">
+                        @isset($url)
+                            <form method="POST" action='{{ url("login/$url") }}'>
+                        @endisset
                             @csrf
                             <div class="form-group mb-3">
                                 <input type="text" placeholder="Email" id="email" class="form-control" name="email" value="{{old('email')}}"

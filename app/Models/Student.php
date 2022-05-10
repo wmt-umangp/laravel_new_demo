@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class Student extends Model
+use Illuminate\Foundation\Auth\User as Authenticatable;
+class Student extends  Authenticatable
 {
-    public $fillable=[
-        'roll_no','name','standard','age','user_id','email'
-    ];
     use HasFactory;
+    public $fillable=[
+        'roll_no','name','standard','age','user_id','email','password'
+    ];
+    protected $guards="student";
     //accessor
     public function getStandardAttribute($value){
         if ($value==1) {

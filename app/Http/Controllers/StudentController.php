@@ -9,7 +9,7 @@ use Auth;
 class StudentController extends Controller
 {
    public function allStudents(){
-       $student=Student::with('user')->latest()->paginate(5);
+       $student=Student::latest()->paginate(5);
         return view('getallstudents',['student'=>$student]);
    }
    public function addStudents(){
@@ -28,9 +28,17 @@ class StudentController extends Controller
             ]
         );
         if($student){
-            return redirect()->route('dashboard')->with('logined','Student added Successfully');
+            return redirect()->route('admindashboard')->with('logined','Student added Successfully');
         }else{
             echo "Error While Adding Students";
         }
+   }
+   public function deleteStudent($id){
+        $student=Student::find($id);
+        if(Auth::user() != $student->user){
+            return redirect()->back();
+        }
+        $student->delete();
+        return back()->with('logined','Student Deleted Successfully!!');
    }
 }

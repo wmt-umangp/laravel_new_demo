@@ -8,6 +8,8 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Observers\UserObserver;
 use App\Models\User;
+use App\Events\studentMail;
+use App\Listeners\studentMailListener;
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        studentMail::class=>[
+            studentMailListener::class,
+        ]
     ];
 
     /**

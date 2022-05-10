@@ -11,6 +11,7 @@
 <body>
     <nav class="navbar navbar-light navbar-expand-lg mb-5" style="background-color: #e3f2fd;">
         <div class="container">
+            <a class="navbar-brand" href="{{route('admindashboard')}}">Student Management System</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -19,17 +20,17 @@
                 <ul class="navbar-nav ms-auto">
                     @guest
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                            <a class="nav-link" href="{{ route('showadminlogin') }}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">Register</a>
+                            <a class="nav-link" href="{{ route('showadminregister') }}">Register</a>
                         </li>
                     @else
-                    <li class="nav-item">
-                        <a class="nav-link me-2" href="{{route('allstudentslist')}}">All Students</a>
-                    </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}">Logout</a>
+                            <a class="nav-link me-2" href="{{route('allstudentslist')}}">All Students</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('alogout') }}">Logout</a>
                         </li>
                     @endguest
                 </ul>
@@ -57,6 +58,7 @@
                     <th>Standard</th>
                     <th>Age</th>
                     <th>Email</th>
+                    <th>Action</th>
                 </tr>
 
                 @foreach ($student as $st)
@@ -66,6 +68,9 @@
                         <td>{{$st->standard}}</td>
                         <td>{{$st->age}}</td>
                         <td>{{$st->email}}</td>
+                        <td>
+                            <a href="{{route('deletestudent',['did'=>$st->id])}}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
                     </tr>
                 @endforeach
             </table>

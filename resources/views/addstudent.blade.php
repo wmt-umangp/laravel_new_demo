@@ -11,6 +11,7 @@
 <body>
     <nav class="navbar navbar-light navbar-expand-lg mb-5" style="background-color: #e3f2fd;">
         <div class="container">
+            <a class="navbar-brand" href="{{route('admindashboard')}}">Student Management System</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -19,14 +20,14 @@
                 <ul class="navbar-nav ms-auto">
                     @guest
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                            <a class="nav-link" href="{{ route('adminsignin') }}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">Register</a>
+                            <a class="nav-link" href="{{ route('adminsignup') }}">Register</a>
                         </li>
                     @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}">Logout</a>
+                            <a class="nav-link" href="{{ route('alogout') }}">Logout</a>
                         </li>
                     @endguest
                 </ul>
@@ -56,14 +57,14 @@
                     </div>
                     <div class="mb-3">
                         <label for="standard" class="form-label">Standard</label>
-                        <input type="number" name="standard" class="form-control" id="standard" placeholder="Enter Standard">
+                        <input type="number" name="standard" class="form-control" id="standard" placeholder="Enter Standard" min="1" max="12" onKeyPress="if(this.value.length==2) return false;">
                         @if ($errors->has('standard'))
                             <span class="text-danger">*{{ $errors->first('standard') }}</span>
                         @endif
                     </div>
                     <div class="mb-3">
                         <label for="age" class="form-label">Age</label>
-                        <input type="number" name="age" class="form-control" id="age" placeholder="Enter Standard">
+                        <input type="number" name="age" class="form-control" id="age" placeholder="Enter Standard" min="1" max="18" onKeyPress="if(this.value.length==2) return false;">
                         @if ($errors->has('age'))
                             <span class="text-danger">*{{ $errors->first('age') }}</span>
                         @endif

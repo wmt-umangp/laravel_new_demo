@@ -8,6 +8,9 @@ use App\Http\Requests\RegisterFormRequest;
 use Auth, Session, Hash;
 use App\Models\User;
 use App\Models\Student;
+use App\Events\studentMail;
+use App\Jobs\studentMailJob;
+use Illuminate\Contracts\Event\Dispatcher;
 class UserController extends Controller
 {
     /**
@@ -20,21 +23,41 @@ class UserController extends Controller
         $student=Student::latest()->where('user_id',Auth::user()->id)->paginate(5);
         return view('dashboard',['student'=>$student]);
     }
-    public function register(){
-        return view('registration');
+    public function showadminregister(){
+        return view('registration',['url' => 'admin']);
     }
-    public function login(){
-        return view('login');
+    public function showstudentregister(){
+        return view('registration',['url' => 'student']);
     }
-    public function authenticate(LoginFormRequest $request)
+    public function showadminlogin(){
+        return view('login',['url'=>'admin']);
+    }
+    public function adminLogin(LoginFormRequest $request)
     {
         $credentials = $request->only('email', 'password');
         $remember_me = $request->has('remember') ? true : false;
-        if (Auth::attempt($credentials,$remember_me)) {
+        if (Auth::guard('admin')->attempt($credentials,$remember_me)) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard')->with('logined','You have Successfully loggedin');
+            return redirect()->intended('/admin/dashboard')->with('logined','You have Successfully loggedin');
         }
-        return redirect("login")->with('message','Opps! You have entered invalid credentials');
+        return redirect("/login/admin")->with('message','Opps! You have entered invalid credentials');
+    }
+    public function showstudentlogin(){
+        return view('login',['url'=>'student']);
+    }
+    public function studentLogin(Request $request){
+        $this->validate($request, [
+            'email'   => 'required|email',
+            'password' => 'required|min:6'
+        ]);
+        $credentials = $request->only('email', 'password');
+        $remember_me = $request->has('remember') ? true : false;
+        if(Auth::guard('student')->attempt($credentials,$remember_me)){
+            $request->session()->regenerate();
+            return redirect()->route('studentdashboard')->with('logined','You have Successfully loggedin');
+            // echo "Hello";
+        }
+        return redirect("/login/student")->with('message','Opps! You have entered invalid credentials');
     }
     /**
      * Show the form for creating a new resource.
@@ -60,7 +83,34 @@ class UserController extends Controller
             'password'=>Hash::make($request->password),
         ]);
         Auth::login($user);
-        return redirect()->route('dashboard');
+        return redirect()->route('admindashboard');
+        // echo "Hello";
+    }
+    public function studentStore(Request $request)
+    {
+        $this->validate($request, [
+            'roll_no'=>'required|numeric|unique:students,roll_no',
+            'name'=>'required|max:100|regex:/^[\pL\s\-]+$/u',
+            'standard'=>'required|numeric',
+            'age'=>'required|numeric',
+            'email'=>'required|email|unique:students,email',
+            'password' => 'required|min:6',
+            'cpassword' => 'required|same:password|min:6',
+        ]);
+        $student=Student::create([
+            'roll_no'=>$request->roll_no,
+            'name'=>$request->name,
+            'standard'=>$request->standard,
+            'age'=>$request->age,
+            'email'=>$request->email,
+            'password'=>Hash::make($request->password),
+        ]);
+        Auth::login($student);
+        // event(new studentMail($request->email));
+        dispatch(new studentMailJob($request->email));
+
+        return redirect()->route('studentdashboard');
+        // print_r($request->all());
     }
     /**
      * Display the specified resource.
@@ -106,9 +156,18 @@ class UserController extends Controller
     {
         //
     }
-    public function logout(){
-        Auth::logout();
-        Session::flush();
-        return redirect('login');
+    public function alogout(){
+        if(Auth::guard('admin')->check()){
+            Auth::guard('admin')->logout();
+            session::flush();
+            return redirect('login/admin');
+        }
+    }
+    public function slogout(){
+        if(Auth::guard('student')->check()){
+            Auth::guard('student')->logout();
+            session::flush();
+            return redirect('login/student');
+        }
     }
 }
