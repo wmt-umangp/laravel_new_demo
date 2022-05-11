@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AddStudentFormRequest;
 use App\Models\Student;
 use Auth;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewStudentNotification;
 class StudentController extends Controller
 {
    public function allStudents(){
@@ -28,6 +31,8 @@ class StudentController extends Controller
             ]
         );
         if($student){
+            // event(new Registered($student));
+            Notification::send(Auth::user(), new NewStudentNotification($student));
             return redirect()->route('admindashboard')->with('logined','Student added Successfully');
         }else{
             echo "Error While Adding Students";

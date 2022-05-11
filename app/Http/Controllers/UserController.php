@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginFormRequest;
 use App\Http\Requests\RegisterFormRequest;
+use App\Http\Requests\EditUserAccountFormRequest;
 use Auth, Session, Hash;
 use App\Models\User;
 use App\Models\Student;
 use App\Events\studentMail;
 use App\Jobs\studentMailJob;
 use Illuminate\Contracts\Event\Dispatcher;
+use Storage;
 class UserController extends Controller
 {
     /**
@@ -111,6 +113,29 @@ class UserController extends Controller
 
         return redirect()->route('studentdashboard');
         // print_r($request->all());
+    }
+    public function getAccount(){
+        return view('adminaccount',['user'=>Auth::user()]);
+    }
+    public function editAccountDisplay(){
+        return view('admineditaccount',['user'=>Auth::user()]);
+    }
+    public function postSaveAccount(EditUserAccountFormRequest $request){
+        $user=Auth::user();
+        $files = $request->file('image');
+        $folder='public/images/User-'.Auth::user()->id.'/';
+        $filename=$files->getClientOriginalName();
+        if (!Storage::exists($folder)) {
+            Storage::makeDirectory($folder, 0775, true, true);
+        }
+        if (!empty($files)) {
+            $files->storeAs($folder,$filename);
+            $user->name=$request->input('name');
+            $user->email=$request->input('email');
+            $user->profile_img_path=$files->getClientOriginalName();
+            $user->update();
+        }
+        return redirect()->route('adminaccount');
     }
     /**
      * Display the specified resource.

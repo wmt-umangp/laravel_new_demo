@@ -10,6 +10,7 @@ use App\Observers\UserObserver;
 use App\Models\User;
 use App\Events\studentMail;
 use App\Listeners\studentMailListener;
+use App\Listeners\SendNewStudentNotification;
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -20,6 +21,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+            SendNewStudentNotification::class,
         ],
         studentMail::class=>[
             studentMailListener::class,

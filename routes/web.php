@@ -30,6 +30,12 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/showallstudents',[StudentController::class,'allStudents'])->name('allstudentslist');
 
     Route::get('/admin/deletestudent/{did}',[StudentController::class,'deleteStudent'])->name('deletestudent');
+
+    Route::get('/admin/account',[UserController::class,'getAccount'])->name('adminaccount');
+
+    Route::get('/admin/editaccount',[UserController::class,'editAccountDisplay'])->name('admineditaccount');
+
+    Route::post('/admin/updateaccount',[UserController::class,'postSaveAccount'])->name('adminupdateaccount');
 });
 
 Route::middleware(['auth:student'])->group(function (){
