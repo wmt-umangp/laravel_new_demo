@@ -8,18 +8,22 @@
                     <h3 class="card-header text-center"> {{ isset($url) ? ucwords($url) : '' }} Login</h3>
                     <div class="card-body">
                         @isset($url)
-                            <form method="POST" action='{{ url("login/$url") }}'>
+                            <form method="POST" action='{{ url("login/$url") }}' id="login-validate">
                         @endisset
                             @csrf
                             <div class="form-group mb-3">
-                                <input type="text" placeholder="Email" id="email" class="form-control" name="email" value="{{old('email')}}"
-                                    autofocus>
-                                @if ($errors->has('email'))
-                                <span class="text-danger">{{ $errors->first('email') }}</span>
+                                <input type="text" placeholder="Email / Username" class="form-control" name="login" id="login" value="{{old('username') ?: old('email')}}">
+                                <span class="jerror"></span>
+                                @if ($errors->has('login')|| $errors->has('username') || $errors->has('email'))
+                                    <span class="text-danger">{{$errors->first('login')}}</span>
+                                    <span class="text-danger">{{$errors->first('username')}}</span>
+                                    <span class="text-danger">{{$errors->first('email')}}</span>
                                 @endif
                             </div>
+
                             <div class="form-group mb-3">
                                 <input type="password" placeholder="Password" id="password" class="form-control" name="password" value="{{old('password')}}">
+                                <span class="perror"></span>
                                 @if ($errors->has('password'))
                                 <span class="text-danger">{{ $errors->first('password') }}</span>
                                 @endif

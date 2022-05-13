@@ -63,8 +63,12 @@
         @guest
             {{ 'Please Login or Reigster First' }}
         @else
+
             <a class="btn btn-success" href="{{ route('addstudents') }}">Add New Student</a>
             <div class="container">
+                @if ($student=="No Records Found")
+                    <h3 class="mt-5">No Records Found!!!</h3>
+                @else
                 <table class="table table-striped mt-5">
                     <tr>
                         <th>Roll No</th>
@@ -93,6 +97,7 @@
                 <div class="d-flex justify-content-center">
                     {!! $student->links() !!}
                 </div>
+                @endif
             </div>
         @endguest
     </div>

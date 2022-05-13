@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
 class LoginFormRequest extends FormRequest
 {
     /**
@@ -23,18 +22,10 @@ class LoginFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-        ];
+
     }
     public function messages()
     {
-        return [
-            'email.required' => 'Please Enter Email',
-            'email.email' => 'Please Enter Valid Email',
-            'password.required' => 'Please Enter Password',
-            'password.min' => 'Password Must be 6 character long',
-        ];
+
     }
 }

@@ -25,6 +25,7 @@ class RegisterFormRequest extends FormRequest
     {
         return [
             'name' => 'required',
+            'username' =>'required|min:6|max:10|unique:users,username',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'cpassword' => 'required|same:password|min:6',
@@ -34,6 +35,10 @@ class RegisterFormRequest extends FormRequest
     {
         return [
             'name.required' => 'Please Enter Name',
+            'username.required'=>'Please Enter Username',
+            'username.min'=>'Minimum 6 characters required',
+            'username.max'=>'Maximum 10 characters allowed',
+            'username.unique'=>'Username already exists',
             'email.required' => 'Please Enter Email',
             'email.email'=>'Please Enter Valid Email',
             'email.unique'=> 'Email Already Exists!!',
